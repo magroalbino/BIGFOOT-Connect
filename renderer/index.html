@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BIGFOOT Connect</title>
+  <style>
+    :root {
+      --bg-color: #f3f4f6;
+      --text-color: #1f2937;
+      --card-color: white;
+    }
+
+    body.dark {
+      --bg-color: #1f2937;
+      --text-color: #f3f4f6;
+      --card-color: #374151;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 32px;
+      background-color: #1e3a8a;
+      color: white;
+      position: relative;
+    }
+
+    .header-center {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    .logo {
+      width: 40px;
+      height: 40px;
+    }
+
+    .left-buttons,
+    .right-buttons {
+      display: flex;
+      gap: 10px;
+    }
+
+    .icon-button {
+      background: #3b82f6;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 8px;
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.3s ease, transform 0.2s;
+    }
+
+    .icon-button:hover {
+      background: #2563eb;
+      transform: scale(1.05);
+    }
+
+    main {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .content {
+      text-align: center;
+      max-width: 600px;
+      margin-right: 60px;
+    }
+
+    .faq {
+      position: absolute;
+      top: 80px;
+      right: 0;
+      width: 350px;
+      background-color: var(--card-color);
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      transition: background-color 0.3s ease;
+      text-align: left;
+      max-height: 500px;
+      overflow-y: auto;
+    }
+
+    .big-button {
+      margin: 32px auto;
+      display: block;
+      padding: 20px 40px;
+      background-color: #10b981;
+      color: white;
+      font-size: 24px;
+      font-weight: bold;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: background 0.3s ease, transform 0.2s;
+    }
+
+    .big-button:hover {
+      background-color: #059669;
+      transform: scale(1.05);
+    }
+
+    .status,
+    .quality,
+    .tokens {
+      margin: 16px 0;
+      font-size: 18px;
+    }
+
+    .dashboard-button {
+      display: flex;
+      justify-content: center;
+      margin-top: 40px;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.4);
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-content {
+      background-color: var(--card-color);
+      padding: 24px;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+      width: 320px;
+      max-width: 90%;
+    }
+
+    .modal-content h3 {
+      margin-top: 0;
+    }
+
+    .modal-content input,
+    .modal-content select {
+      width: 100%;
+      padding: 8px;
+      margin: 8px 0;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      box-sizing: border-box;
+    }
+
+    .modal-content button {
+      margin-top: 12px;
+      width: 100%;
+      padding: 10px;
+    }
+
+    .close {
+      float: right;
+      font-size: 20px;
+      cursor: pointer;
+    }
+
+    .center-box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding-top: 32px;
+    }
+
+    .tokens {
+      margin: 24px 0 16px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .tokens strong {
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    details summary {
+      cursor: pointer;
+      font-weight: bold;
+      margin-top: 12px;
+      outline: none;
+    }
+
+    details p {
+      margin: 8px 0 12px 16px;
+      line-height: 1.4;
+    }
+
+    #threadSelector {
+      margin: 16px auto 0;
+      font-size: 18px;
+      max-width: 200px;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      cursor: pointer;
+    }
+
+    #errorMessage {
+      color: red;
+      font-size: 14px;
+      margin-top: 8px;
+      display: none;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="left-buttons">
+      <button class="icon-button" onclick="document.body.classList.toggle('dark')">🌓 Tema</button>
+    </div>
+    <div class="header-center">
+      <img src="logo.png" alt="Logo BIGFOOT" class="logo" />
+      BIGFOOT Connect
+    </div>
+    <div class="right-buttons" id="authButtons"></div>
+  </header>
+
+  <main>
+    <div class="center-box">
+      <div class="tokens">
+        <strong id="threadsLabel">Selecione número de threads para mineração</strong>
+        <select id="threadSelector" aria-label="Selecione o nível de compartilhamento">
+          <option value="1" data-en="Low" data-pt="Baixo">🔹 Baixo</option>
+          <option value="2" data-en="Medium" data-pt="Médio">🔸 Médio</option>
+          <option value="3" data-en="High" data-pt="Alto">🔶 Alto</option>
+          <option value="4" data-en="Maximum" data-pt="Máximo" selected>🚀 Máximo</option>
+        </select>
+      </div>
+
+      <button class="big-button" id="connectBtn"></button>
+
+      <div class="status">
+        <strong>Status:</strong> <span id="statusText"></span>
+      </div>
+
+      <div class="quality">
+        <strong></strong> <span id="networkQualityValue">--</span>
+      </div>
+
+      <div class="dashboard-button">
+        <button class="icon-button" id="dashboardBtn"></button>
+      </div>
+    </div>
+
+    <section class="faq" id="faqSection" tabindex="0" aria-label="FAQ Section"></section>
+  </main>
+
+  <div class="modal" id="settingsModal" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
+    <div class="modal-content">
+      <span class="close" onclick="toggleModal('settingsModal')" aria-label="Fechar">×</span>
+      <h3 id="settingsTitle">Configurações</h3>
+      <label for="languageSelect">Idioma:</label>
+      <select id="languageSelect" name="languageSelect">
+        <option value="pt">Português</option>
+        <option value="en">English</option>
+      </select>
+      <br><br>
+      <button class="icon-button" onclick="saveSettings()">Salvar</button>
+    </div>
+  </div>
+
+  <div class="modal" id="loginModal" role="dialog" aria-modal="true" aria-labelledby="loginTitle">
+    <div class="modal-content">
+      <span class="close" onclick="toggleModal('loginModal')" aria-label="Fechar">×</span>
+      <h3 id="loginTitle">Entrar / Cadastrar</h3>
+      <input type="text" id="userId" placeholder="Username" aria-label="Username" required />
+      <input type="password" id="userPassword" placeholder="Password" aria-label="Password" required />
+      <div id="errorMessage" style="color: red; font-size: 14px; margin-top: 8px; display: none;"></div>
+      <button class="icon-button" onclick="handleLogin()">Entrar</button>
+      <button class="icon-button" onclick="handleRegister()">Cadastrar</button>
+    </div>
+  </div>
+
+  <script>
+    const translations = {
+      pt: {
+        connect: "🔌 Conectar / Desconectar",
+        stop: "🛑 Parar",
+        statusDisconnected: "Desconectado",
+        statusMining: "Compartilhando",
+        received: "Você já recebeu:",
+        config: "⚙️ Configurações",
+        login: "🔐 Login",
+        logout: "🚪 Sair",
+        networkQuality: "Qualidade da Rede:",
+        dashboard: "🖥️ Dashboard",
+        selectThreadsLabel: "Selecione o nível de compartilhamento"
+      },
+      en: {
+        connect: "🔌 Connect / Disconnect",
+        stop: "🛑 Stop",
+        statusDisconnected: "Disconnected",
+        statusMining: "Sharing",
+        received: "You’ve received:",
+        config: "⚙️ Settings",
+        login: "🔐 Login",
+        logout: "🚪 Logout",
+        networkQuality: "Network Quality:",
+        dashboard: "🖥️ Dashboard",
+        selectThreadsLabel: "Select sharing level"
+      }
+    };
+
+    const faqContent = {
+      pt: [
+        { question: "O que é o BIGFOOT Connect?", answer: "É uma aplicação para compartilhar sua largura de banda e ganhar tokens BIG na rede Solana." },
+        { question: "Como faço para compartilhar minha largura de banda?", answer: "Basta fazer login e ativar o botão conectar para começar a compartilhar." },
+        { question: "Como recebo recompensas?", answer: "Você recebe tokens BIG proporcionalmente ao uso da sua banda compartilhada." }
+      ],
+      en: [
+        { question: "What is BIGFOOT Connect?", answer: "It’s an application to share your bandwidth and earn BIG tokens on the Solana network." },
+        { question: "How do I share my bandwidth?", answer: "Just log in and activate the connect button to start sharing." },
+        { question: "How do I receive rewards?", answer: "You receive BIG tokens proportionally to the bandwidth you share." }
+      ]
+    };
+
+    let currentLang = localStorage.getItem('bigfootLang') || 'pt';
+    let isLoggedIn = false;
+    let isMining = false;
+    let pktMined = 0;
+    let networkQuality = 0;
+
+    const authButtons = document.getElementById('authButtons');
+    const connectBtn = document.getElementById('connectBtn');
+    const statusText = document.getElementById('statusText');
+    const networkQualityValue = document.getElementById('networkQualityValue');
+    const dashboardBtn = document.getElementById('dashboardBtn');
+    const faqSection = document.getElementById('faqSection');
+    const languageSelect = document.getElementById('languageSelect');
+    const threadSelector = document.getElementById('threadSelector');
+
+    function renderFAQ() {
+      const faqList = faqContent[currentLang];
+      const openStates = [];
+      const currentDetails = faqSection.querySelectorAll('details');
+      currentDetails.forEach((det, i) => {
+        openStates[i] = det.open;
+      });
+
+      if (faqSection.children.length !== faqList.length) {
+        faqSection.innerHTML = '';
+        faqList.forEach(({ question, answer }) => {
+          const details = document.createElement('details');
+          const summary = document.createElement('summary');
+          summary.textContent = question;
+          const p = document.createElement('p');
+          p.textContent = answer;
+          details.appendChild(summary);
+          details.appendChild(p);
+          faqSection.appendChild(details);
+        });
+      } else {
+        faqList.forEach(({ question, answer }, i) => {
+          const details = faqSection.children[i];
+          details.querySelector('summary').textContent = question;
+          details.querySelector('p').textContent = answer;
+        });
+      }
+
+      const newDetails = faqSection.querySelectorAll('details');
+      newDetails.forEach((det, i) => {
+        det.open = openStates[i] || false;
+      });
+    }
+
+    function updateThreadOptionsLanguage() {
+      const options = threadSelector.querySelectorAll('option');
+      options.forEach(option => {
+        const label = currentLang === 'en' ? option.dataset.en : option.dataset.pt;
+        const emoji = option.textContent.match(/^[^\s]+/);
+        option.textContent = (emoji ? emoji[0] + ' ' : '') + label;
+      });
+    }
+
+    function updateText() {
+      const t = translations[currentLang];
+      connectBtn.textContent = isMining ? t.stop : t.connect;
+      connectBtn.disabled = !isLoggedIn;
+      connectBtn.style.opacity = connectBtn.disabled ? 0.5 : 1;
+      statusText.textContent = isMining ? t.statusMining : t.statusDisconnected;
+      document.getElementById('threadsLabel').textContent = t.selectThreadsLabel;
+      document.querySelector('.quality strong').textContent = t.networkQuality;
+      networkQualityValue.textContent = networkQuality + "%";
+      dashboardBtn.textContent = t.dashboard;
+
+      if (isLoggedIn) {
+        authButtons.innerHTML =
+          `<div>
+            <button class="icon-button" onclick="toggleModal('settingsModal')">${t.config}</button>
+            <button class="icon-button" onclick="handleLogout()">${t.logout}</button>
+          </div>`;
+      } else {
+        authButtons.innerHTML =
+          `<div>
+            <button class="icon-button" onclick="toggleModal('settingsModal')">${t.config}</button>
+            <button class="icon-button" onclick="toggleModal('loginModal')">${t.login}</button>
+          </div>`;
+      }
+
+      languageSelect.value = currentLang;
+      threadSelector.setAttribute('aria-label', t.selectThreadsLabel);
+      updateThreadOptionsLanguage();
+      renderFAQ();
+    }
+
+    function simulateNetworkQuality() {
+      networkQuality = Math.floor(50 + Math.random() * 50);
+      updateText();
+    }
+
+    function simulateMining() {
+      if (!isMining) return;
+      pktMined++;
+      updateText();
+    }
+
+    function toggleModal(id) {
+      const modal = document.getElementById(id);
+      if (!modal) return;
+      modal.style.display = modal.style.display === 'flex' ? 'none' : 'flex';
+    }
+
+    function handleLogin() {
+      const username = document.getElementById('userId').value.trim();
+      const userPass = document.getElementById('userPassword').value.trim();
+      const errorMessage = document.getElementById('errorMessage');
+      errorMessage.style.display = 'none';
+
+      console.log('[Frontend] Enviando login:', { username, password: userPass });
+
+      if (!username || !userPass) {
+        errorMessage.textContent = currentLang === 'pt' ? 'Preencha todos os campos.' : 'Please fill in all fields.';
+        errorMessage.style.display = 'block';
+        return;
+      }
+
+      if (username.length < 3 || userPass.length < 6) {
+        errorMessage.textContent = currentLang === 'pt' ? 'Username deve ter pelo menos 3 caracteres e senha 6 caracteres.' : 'Username must be at least 3 characters and password 6 characters.';
+        errorMessage.style.display = 'block';
+        return;
+      }
+
+      fetch('https://bigfoot-connect-api.vercel.app/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password: userPass })
+      })
+        .then(async (res) => {
+          if (!res.ok) {
+            const errJson = await res.json().catch(() => ({}));
+            throw new Error(errJson.message || `Erro ${res.status}: ${res.statusText}`);
+          }
+          return res.json();
+        })
+        .then(data => {
+          alert(currentLang === 'pt' ? 'Login realizado com sucesso!' : 'Login successful!');
+          isLoggedIn = true;
+          toggleModal('loginModal');
+          updateText();
+        })
+        .catch(err => {
+          console.error('Erro no login:', err);
+          errorMessage.textContent = currentLang === 'pt' ? `Erro no login: ${err.message}` : `Login error: ${err.message}`;
+          errorMessage.style.display = 'block';
+        });
+    }
+
+    function handleRegister() {
+      const username = document.getElementById('userId').value.trim();
+      const userPass = document.getElementById('userPassword').value.trim();
+      const errorMessage = document.getElementById('errorMessage');
+      errorMessage.style.display = 'none';
+
+      console.log('[Frontend] Enviando registro:', { username, password: userPass });
+
+      if (!username || !userPass) {
+        errorMessage.textContent = currentLang === 'pt' ? 'Preencha todos os campos.' : 'Please fill in all fields.';
+        errorMessage.style.display = 'block';
+        return;
+      }
+
+      if (username.length < 3 || userPass.length < 6) {
+        errorMessage.textContent = currentLang === 'pt' ? 'Username deve ter pelo menos 3 caracteres e senha 6 caracteres.' : 'Username must be at least 3 characters and password 6 characters.';
+        errorMessage.style.display = 'block';
+        return;
+      }
+
+      fetch('https://bigfoot-connect-api.vercel.app/api/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password: userPass })
+      })
+        .then(async (res) => {
+          if (!res.ok) {
+            const errJson = await res.json().catch(() => ({}));
+            const errorMessage = errJson.message || `Erro ${res.status}: ${res.statusText}`;
+            throw new Error(errorMessage);
+          }
+          return res.json();
+        })
+        .then(data => {
+          alert(currentLang === 'pt' ? 'Cadastro realizado com sucesso!' : 'Registration successful!');
+          isLoggedIn = true;
+          toggleModal('loginModal');
+          updateText();
+        })
+        .catch(err => {
+          console.error('Erro no registro:', err);
+          errorMessage.textContent = currentLang === 'pt' ? `Erro no cadastro: ${err.message}` : `Registration error: ${err.message}`;
+          errorMessage.style.display = 'block';
+        });
+    }
+
+    function handleLogout() {
+      isLoggedIn = false;
+      isMining = false;
+      updateText();
+    }
+
+    function saveSettings() {
+      const lang = languageSelect.value;
+      currentLang = lang;
+      localStorage.setItem('bigfootLang', lang);
+      toggleModal('settingsModal');
+      updateText();
+    }
+
+    connectBtn.addEventListener('click', () => {
+      if (!isLoggedIn) {
+        alert(currentLang === 'pt' ? 'Faça login para conectar.' : 'Please login to connect.');
+        toggleModal('loginModal');
+        return;
+      }
+      if (isMining) {
+        isMining = false;
+      } else {
+        isMining = true;
+      }
+      updateText();
+    });
+
+    dashboardBtn.addEventListener('click', () => {
+      alert(currentLang === 'pt' ? 'Dashboard não implementado.' : 'Dashboard not implemented.');
+    });
+
+    updateText();
+    setInterval(simulateNetworkQuality, 10000);
+  </script>
+</body>
+
+</html>

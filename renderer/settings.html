@@ -1,0 +1,7 @@
+saveBtn.addEventListener("click", () => {
+  const selectedLang = languageSelect.value;
+  localStorage.setItem("language", selectedLang);
+
+  // Após salvar, recarrega a tela principal
+  window.location.href = "../renderer/index.html";
+});

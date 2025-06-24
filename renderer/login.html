@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="pt">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 50px;
+    }
+
+    .tab-buttons {
+      margin-bottom: 20px;
+    }
+
+    .tab-buttons button {
+      padding: 8px 16px;
+      margin: 0 5px;
+      cursor: pointer;
+    }
+
+    .form-container {
+      display: none;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .form-container.active {
+      display: flex;
+    }
+
+    input {
+      padding: 6px;
+      width: 200px;
+    }
+
+    button[type="submit"],
+    button {
+      margin-top: 10px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+  <h2>Login / Cadastro</h2>
+
+  <div class="tab-buttons" role="tablist" aria-label="Alternar entre login e cadastro">
+    <button id="showLogin" role="tab" aria-selected="true" aria-controls="loginForm">Login</button>
+    <button id="showRegister" role="tab" aria-selected="false" aria-controls="registerForm">Cadastrar</button>
+  </div>
+
+  <div id="loginForm" class="form-container active" role="tabpanel" tabindex="0" aria-labelledby="showLogin">
+    <input type="email" id="loginEmail" placeholder="Email" aria-label="Email para login" />
+    <input type="password" id="loginPassword" placeholder="Senha" aria-label="Senha para login" />
+    <button id="loginBtn" type="button">Entrar</button>
+  </div>
+
+  <div id="registerForm" class="form-container" role="tabpanel" tabindex="0" aria-labelledby="showRegister">
+    <input type="email" id="registerEmail" placeholder="Email" aria-label="Email para cadastro" />
+    <input type="text" id="registerFullName" placeholder="Nome Completo" aria-label="Nome completo para cadastro" />
+    <input type="password" id="registerPassword" placeholder="Senha" aria-label="Senha para cadastro" />
+    <button id="registerBtn" type="button">Cadastrar</button>
+  </div>
+
+  <script>
+    // Defina a URL do backend (supondo que seu servidor Express está rodando na porta 3000)
+    const BASE_URL = 'http://localhost:3000';
+
+    document.getElementById('registerBtn').addEventListener('click', async () => {
+      const email = document.getElementById('registerEmail').value.trim();
+      const fullName = document.getElementById('registerFullName').value.trim();
+      const password = document.getElementById('registerPassword').value;
+
+      if (!email || !password || !fullName) {
+        alert('Preencha todos os campos para cadastro.');
+        return;
+      }
+
+      const btn = document.getElementById('registerBtn');
+      btn.disabled = true;
+
+      try {
+        const response = await fetch(`${BASE_URL}/register`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, fullName, password })
+        });
+
+        const data = await response.json();
+        console.log('[Frontend] Resposta da API /register:', data);
+
+        if (!data.success) {
+          alert('Falha no cadastro: ' + (data.error || 'Erro desconhecido'));
+          return;
+        }
+
+        alert('Usuário cadastrado com sucesso! Confirme seu email para continuar.');
+        // Alterna para a aba de login, se desejar:
+        switchToLogin();
+      } catch (error) {
+        console.error('[Frontend] Erro no fetch:', error);
+        alert('Erro inesperado no cadastro: ' + error.message);
+      } finally {
+        btn.disabled = false;
+      }
+    });
+  </script>
+</body>
+
+</html>
