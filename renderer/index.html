@@ -75,9 +75,10 @@
     }
 
     main {
-      position: relative;
       display: flex;
+      flex-wrap: wrap;
       justify-content: center;
+      gap: 32px;
       padding: 24px;
     }
 
@@ -88,10 +89,8 @@
     }
 
     .faq {
-      position: absolute;
-      top: 80px;
-      right: 0;
-      width: 350px;
+      width: 100%;
+      max-width: 350px;
       background-color: var(--card-color);
       border-radius: 16px;
       padding: 24px;
@@ -100,6 +99,7 @@
       text-align: left;
       max-height: 500px;
       overflow-y: auto;
+      margin-top: 32px;
     }
 
     .big-button {
