@@ -231,6 +231,60 @@
       margin-top: 8px;
       display: none;
     }
+
+    /* Correções para responsividade */
+
+    @media (max-width: 768px) {
+      header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+        padding: 16px;
+      }
+
+      .header-center {
+        position: static;
+        transform: none;
+        margin: auto;
+      }
+
+      .left-buttons,
+      .right-buttons {
+        width: 100%;
+        justify-content: space-between;
+      }
+
+      main {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .content {
+        margin-right: 0;
+        width: 100%;
+        text-align: center;
+      }
+
+      .faq {
+        position: static;
+        width: 100%;
+        margin-top: 24px;
+      }
+
+      .dashboard-button {
+        margin-top: 20px;
+      }
+
+      .big-button {
+        width: 100%;
+        max-width: 320px;
+      }
+
+      #threadSelector {
+        width: 100%;
+        max-width: 300px;
+      }
+    }
   </style>
 </head>
 
