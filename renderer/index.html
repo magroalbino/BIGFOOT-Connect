@@ -77,26 +77,16 @@
     main {
       display: flex;
       flex-wrap: wrap;
-      justify-content: center;
-      /* Center the content */
+      justify-content: space-between;
       align-items: flex-start;
       padding: 40px 60px;
       gap: 40px;
-      position: relative;
-      /* For absolute positioning of FAQ */
-      max-width: 1200px;
-      /* Optional: limit max width for better control */
-      margin: 0 auto;
-      /* Center the main container */
     }
 
     .content {
       text-align: center;
       max-width: 600px;
-      margin-right: 0;
-      /* Remove fixed margin */
-      flex: 1 1 600px;
-      /* Allow flexibility but maintain min width */
+      margin-right: 60px;
     }
 
     .faq {
@@ -111,12 +101,6 @@
       max-height: 500px;
       overflow-y: auto;
       margin-top: 32px;
-      position: absolute;
-      /* Pin to right */
-      right: 60px;
-      /* Distance from right edge */
-      top: 40px;
-      /* Align with top padding of main */
     }
 
     .big-button {
@@ -274,8 +258,6 @@
       main {
         flex-direction: column;
         align-items: center;
-        padding: 16px;
-        /* Reduzido para melhor ajuste em mobile */
       }
 
       .content {
@@ -286,11 +268,8 @@
 
       .faq {
         position: static;
-        /* Reverte para static em mobile */
         width: 100%;
         margin-top: 24px;
-        right: auto;
-        /* Remove posicionamento à direita */
       }
 
       .dashboard-button {
@@ -313,7 +292,7 @@
 <body>
   <header>
     <div class="left-buttons">
-      <button class="icon-button" onclick="document.body.classList.toggle('dark')">🌓 Tema</button>
+      <button class="icon-button" onclick="document.body.classList.toggle('dark')"> Tema</button>
     </div>
     <div class="header-center">
       <img src="logo.png" alt="Logo BIGFOOT" class="logo" />
@@ -327,10 +306,10 @@
       <div class="tokens">
         <strong id="threadsLabel">Selecione número de threads para mineração</strong>
         <select id="threadSelector" aria-label="Selecione o nível de compartilhamento">
-          <option value="1" data-en="Low" data-pt="Baixo">🔹 Baixo</option>
-          <option value="2" data-en="Medium" data-pt="Médio">🔸 Médio</option>
-          <option value="3" data-en="High" data-pt="Alto">🔶 Alto</option>
-          <option value="4" data-en="Maximum" data-pt="Máximo" selected>🚀 Máximo</option>
+          <option value="1" data-en="Low" data-pt="Baixo"> Baixo</option>
+          <option value="2" data-en="Medium" data-pt="Médio"> Médio</option>
+          <option value="3" data-en="High" data-pt="Alto"> Alto</option>
+          <option value="4" data-en="Maximum" data-pt="Máximo" selected> Máximo</option>
         </select>
       </div>
 
@@ -381,29 +360,29 @@
   <script>
     const translations = {
       pt: {
-        connect: "🔌 Conectar / Desconectar",
-        stop: "🛑 Parar",
+        connect: " Conectar / Desconectar",
+        stop: " Parar",
         statusDisconnected: "Desconectado",
         statusMining: "Compartilhando",
         received: "Você já recebeu:",
-        config: "⚙️ Configurações",
-        login: "🔐 Login",
-        logout: "🚪 Sair",
+        config: " Configurações",
+        login: " Login",
+        logout: " Sair",
         networkQuality: "Qualidade da Rede:",
-        dashboard: "🖥️ Dashboard",
+        dashboard: " Dashboard",
         selectThreadsLabel: "Selecione o nível de compartilhamento"
       },
       en: {
-        connect: "🔌 Connect / Disconnect",
-        stop: "🛑 Stop",
+        connect: " Connect / Disconnect",
+        stop: " Stop",
         statusDisconnected: "Disconnected",
         statusMining: "Sharing",
         received: "You’ve received:",
-        config: "⚙️ Settings",
-        login: "🔐 Login",
-        logout: "🚪 Logout",
+        config: " Settings",
+        login: " Login",
+        logout: " Logout",
         networkQuality: "Network Quality:",
-        dashboard: "🖥️ Dashboard",
+        dashboard: " Dashboard",
         selectThreadsLabel: "Select sharing level"
       }
     };
@@ -492,16 +471,16 @@
 
       if (isLoggedIn) {
         authButtons.innerHTML =
-          <div>
+          `<div>
             <button class="icon-button" onclick="toggleModal('settingsModal')">${t.config}</button>
             <button class="icon-button" onclick="handleLogout()">${t.logout}</button>
-          </div>;
+          </div>`;
       } else {
         authButtons.innerHTML =
-          <div>
+          `<div>
             <button class="icon-button" onclick="toggleModal('settingsModal')">${t.config}</button>
             <button class="icon-button" onclick="toggleModal('loginModal')">${t.login}</button>
-          </div>;
+          </div>`;
       }
 
       languageSelect.value = currentLang;
