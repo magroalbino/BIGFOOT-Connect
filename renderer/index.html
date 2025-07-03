@@ -349,7 +349,10 @@
       </div>
     </div>
 
-    <section class="faq" id="faqSection" tabindex="0" aria-label="FAQ Section"></section>
+    <section class="faq" id="faqSection" tabindex="0" aria-label="FAQ Section">
+      <button id="toggleFaqBtn" class="icon-button" style="margin-bottom: 16px;"></button>
+      <div id="faqContentContainer"></div>
+    </section>
   </main>
 
   <div class="modal" id="settingsModal" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
@@ -435,40 +438,50 @@
     const faqSection = document.getElementById('faqSection');
     const languageSelect = document.getElementById('languageSelect');
     const threadSelector = document.getElementById('threadSelector');
+    const toggleFaqBtn = document.getElementById('toggleFaqBtn');
+    const faqContentContainer = document.getElementById('faqContentContainer');
+    let faqVisible = true;
 
     function renderFAQ() {
       const faqList = faqContent[currentLang];
       const openStates = [];
-      const currentDetails = faqSection.querySelectorAll('details');
+      const currentDetails = faqContentContainer.querySelectorAll('details');
       currentDetails.forEach((det, i) => {
         openStates[i] = det.open;
       });
 
-      if (faqSection.children.length !== faqList.length) {
-        faqSection.innerHTML = '';
-        faqList.forEach(({ question, answer }) => {
-          const details = document.createElement('details');
-          const summary = document.createElement('summary');
-          summary.textContent = question;
-          const p = document.createElement('p');
-          p.textContent = answer;
-          details.appendChild(summary);
-          details.appendChild(p);
-          faqSection.appendChild(details);
-        });
-      } else {
-        faqList.forEach(({ question, answer }, i) => {
-          const details = faqSection.children[i];
-          details.querySelector('summary').textContent = question;
-          details.querySelector('p').textContent = answer;
-        });
-      }
+      faqContentContainer.innerHTML = '';
 
-      const newDetails = faqSection.querySelectorAll('details');
-      newDetails.forEach((det, i) => {
-        det.open = openStates[i] || false;
+      faqList.forEach(({ question, answer }, i) => {
+        const details = document.createElement('details');
+        const summary = document.createElement('summary');
+        summary.textContent = question;
+        const p = document.createElement('p');
+        p.textContent = answer;
+        details.appendChild(summary);
+        details.appendChild(p);
+        details.open = openStates[i] || false;
+        faqContentContainer.appendChild(details);
       });
     }
+
+    const newDetails = faqSection.querySelectorAll('details');
+    newDetails.forEach((det, i) => {
+      det.open = openStates[i] || false;
+    });
+
+    function updateFaqToggleText() {
+      toggleFaqBtn.textContent = faqVisible
+        ? (currentLang === 'pt' ? '❌ Fechar FAQ' : '❌ Close FAQ')
+        : (currentLang === 'pt' ? '❓ Mostrar FAQ' : '❓ Show FAQ');
+    }
+
+    toggleFaqBtn.addEventListener('click', () => {
+      faqVisible = !faqVisible;
+      faqContentContainer.style.display = faqVisible ? 'block' : 'none';
+      updateFaqToggleText();
+      faqContentContainer.style.display = faqVisible ? 'block' : 'none';
+    });
 
     function updateThreadOptionsLanguage() {
       const options = threadSelector.querySelectorAll('option');
