@@ -113,7 +113,7 @@
       margin-top: 32px;
       position: absolute;
       /* Pin to right */
-      right: 60px;
+      right: 80px;
       /* Distance from right edge */
       top: 40px;
       /* Align with top padding of main */
@@ -440,7 +440,8 @@
     const threadSelector = document.getElementById('threadSelector');
     const toggleFaqBtn = document.getElementById('toggleFaqBtn');
     const faqContentContainer = document.getElementById('faqContentContainer');
-    let faqVisible = true;
+    let faqVisible = false;
+    faqContentContainer.style.display = 'none';
 
     function renderFAQ() {
       const faqList = faqContent[currentLang];
