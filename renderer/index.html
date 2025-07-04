@@ -122,7 +122,7 @@
       top: 40px;
     }
 
-    .faq-button {
+    .faq-toggle-button {
       background: #3b82f6;
       border: none;
       padding: 10px 16px;
@@ -135,7 +135,7 @@
       margin-top: 12px;
     }
 
-    .faq-button:hover {
+    .faq-toggle-button:hover {
       background: #2563eb;
       transform: scale(1.05);
     }
@@ -233,7 +233,7 @@
       margin-bottom: 8px;
     }
 
-    details summary {
+    details.summary {
       cursor: pointer;
       font-weight: bold;
       margin-top: 12px;
@@ -321,9 +321,8 @@
         max-width: 300px;
       }
 
-      .faq-button {
+      .faq-toggle-button {
         width: 100%;
-        /* Ensure full width on mobile */
       }
     }
   </style>
@@ -411,7 +410,8 @@
         networkQuality: "Qualidade da Rede:",
         dashboard: " Dashboard",
         selectThreadsLabel: "Selecione o nível de compartilhamento",
-        addQuestion: " Adicionar Pergunta" // New translation for the button
+        toggleQuestions: "Mostrar Perguntas", // Initial text for showing
+        hideQuestions: "Esconder Perguntas"  // Text for hiding
       },
       en: {
         connect: " Connect / Disconnect",
@@ -425,7 +425,8 @@
         networkQuality: "Network Quality:",
         dashboard: " Dashboard",
         selectThreadsLabel: "Select sharing level",
-        addQuestion: " Add Question" // New translation for the button
+        toggleQuestions: "Show Questions",   // Initial text for showing
+        hideQuestions: "Hide Questions"     // Text for hiding
       }
     };
 
@@ -447,6 +448,7 @@
     let isMining = false;
     let pktMined = 0;
     let networkQuality = 0;
+    let isFaqVisible = false; // State to track FAQ visibility
 
     const authButtons = document.getElementById('authButtons');
     const connectBtn = document.getElementById('connectBtn');
@@ -465,7 +467,7 @@
         openStates[i] = det.open;
       });
 
-      if (faqSection.children.length !== faqList.length + 1) { // +1 for the button
+      if (faqSection.children.length !== faqList.length + 1) { // +1 for the toggle button
         faqSection.innerHTML = '';
         faqList.forEach(({ question, answer }) => {
           const details = document.createElement('details');
@@ -477,12 +479,12 @@
           details.appendChild(p);
           faqSection.appendChild(details);
         });
-        // Add the button after the FAQ items
-        const addButton = document.createElement('button');
-        addButton.className = 'faq-button';
-        addButton.textContent = translations[currentLang].addQuestion;
-        addButton.onclick = () => alert('Funcionalidade de adicionar pergunta não implementada.'); // Placeholder action
-        faqSection.appendChild(addButton);
+        // Add the toggle button
+        const toggleButton = document.createElement('button');
+        toggleButton.className = 'faq-toggle-button';
+        toggleButton.textContent = translations[currentLang].toggleQuestions;
+        toggleButton.onclick = toggleFaqVisibility;
+        faqSection.appendChild(toggleButton);
       } else {
         faqList.forEach(({ question, answer }, i) => {
           const details = faqSection.children[i];
@@ -490,16 +492,22 @@
           details.querySelector('p').textContent = answer;
         });
         // Update button text
-        const addButton = faqSection.lastElementChild;
-        if (addButton && addButton.className === 'faq-button') {
-          addButton.textContent = translations[currentLang].addQuestion;
+        const toggleButton = faqSection.lastElementChild;
+        if (toggleButton && toggleButton.className === 'faq-toggle-button') {
+          toggleButton.textContent = isFaqVisible ? translations[currentLang].hideQuestions : translations[currentLang].toggleQuestions;
         }
       }
 
       const newDetails = faqSection.querySelectorAll('details');
       newDetails.forEach((det, i) => {
+        det.style.display = isFaqVisible ? 'block' : 'none';
         det.open = openStates[i] || false;
       });
+    }
+
+    function toggleFaqVisibility() {
+      isFaqVisible = !isFaqVisible;
+      renderFAQ(); // Re-render to update visibility and button text
     }
 
     function updateThreadOptionsLanguage() {
