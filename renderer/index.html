@@ -78,40 +78,31 @@
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
-      /* Center the content */
       align-items: flex-start;
       padding: 40px 60px;
       gap: 40px;
       position: relative;
-      /* For absolute positioning of FAQ */
       max-width: 1200px;
-      /* Limit max width for better control */
       margin: 0 auto;
-      /* Center the main container */
     }
 
     .center-box {
       display: flex;
       flex-direction: column;
       align-items: center;
-      /* Ensure children are centered */
       justify-content: center;
       padding-top: 32px;
       text-align: center;
-      /* Center text within the box */
     }
 
     .content {
       text-align: center;
       max-width: 600px;
       margin-right: 0;
-      /* Remove fixed margin */
       flex: 1 1 600px;
-      /* Allow flexibility but maintain min width */
       display: flex;
       flex-direction: column;
       align-items: center;
-      /* Center all content */
     }
 
     .faq {
@@ -127,11 +118,26 @@
       overflow-y: auto;
       margin-top: 32px;
       position: absolute;
-      /* Pin to right */
       right: 60px;
-      /* Distance from right edge */
       top: 40px;
-      /* Align with top padding of main */
+    }
+
+    .faq-button {
+      background: #3b82f6;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 8px;
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.3s ease, transform 0.2s;
+      width: 100%;
+      margin-top: 12px;
+    }
+
+    .faq-button:hover {
+      background: #2563eb;
+      transform: scale(1.05);
     }
 
     .big-button {
@@ -282,12 +288,10 @@
         flex-direction: column;
         align-items: center;
         padding: 16px;
-        /* Reduce padding on mobile */
       }
 
       .center-box {
         width: 100%;
-        /* Ensure full width on mobile */
       }
 
       .content {
@@ -298,11 +302,9 @@
 
       .faq {
         position: static;
-        /* Reset to static for mobile */
         width: 100%;
         margin-top: 24px;
         right: auto;
-        /* Remove right positioning */
       }
 
       .dashboard-button {
@@ -317,6 +319,11 @@
       #threadSelector {
         width: 100%;
         max-width: 300px;
+      }
+
+      .faq-button {
+        width: 100%;
+        /* Ensure full width on mobile */
       }
     }
   </style>
@@ -403,7 +410,8 @@
         logout: " Sair",
         networkQuality: "Qualidade da Rede:",
         dashboard: " Dashboard",
-        selectThreadsLabel: "Selecione o nível de compartilhamento"
+        selectThreadsLabel: "Selecione o nível de compartilhamento",
+        addQuestion: " Adicionar Pergunta" // New translation for the button
       },
       en: {
         connect: " Connect / Disconnect",
@@ -416,7 +424,8 @@
         logout: " Logout",
         networkQuality: "Network Quality:",
         dashboard: " Dashboard",
-        selectThreadsLabel: "Select sharing level"
+        selectThreadsLabel: "Select sharing level",
+        addQuestion: " Add Question" // New translation for the button
       }
     };
 
@@ -456,7 +465,7 @@
         openStates[i] = det.open;
       });
 
-      if (faqSection.children.length !== faqList.length) {
+      if (faqSection.children.length !== faqList.length + 1) { // +1 for the button
         faqSection.innerHTML = '';
         faqList.forEach(({ question, answer }) => {
           const details = document.createElement('details');
@@ -468,12 +477,23 @@
           details.appendChild(p);
           faqSection.appendChild(details);
         });
+        // Add the button after the FAQ items
+        const addButton = document.createElement('button');
+        addButton.className = 'faq-button';
+        addButton.textContent = translations[currentLang].addQuestion;
+        addButton.onclick = () => alert('Funcionalidade de adicionar pergunta não implementada.'); // Placeholder action
+        faqSection.appendChild(addButton);
       } else {
         faqList.forEach(({ question, answer }, i) => {
           const details = faqSection.children[i];
           details.querySelector('summary').textContent = question;
           details.querySelector('p').textContent = answer;
         });
+        // Update button text
+        const addButton = faqSection.lastElementChild;
+        if (addButton && addButton.className === 'faq-button') {
+          addButton.textContent = translations[currentLang].addQuestion;
+        }
       }
 
       const newDetails = faqSection.querySelectorAll('details');
